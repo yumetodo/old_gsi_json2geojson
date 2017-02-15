@@ -6,6 +6,67 @@ using CommandLine.Text;
 
 namespace old_gsi_json2geojson
 {
+	public class Style
+	{
+		public string strokeColor { get; set; }
+		public string strokeWidth { get; set; }
+		public double strokeOpacity { get; set; }
+		public string strokeLinecap { get; set; }
+	}
+	public class Geometry
+	{
+		public string type { get; set; }
+		public List<Point> coordinates { get; set; }
+	}
+	public class Datum
+	{
+		public string name { get; set; }
+		public string type { get; set; }
+		public Geometry geometry { get; set; }
+	}
+	public class Layer
+	{
+		public string name { get; set; }
+		public Style style { get; set; }
+		public List<Datum> data { get; set; }
+	}
+	public class Properties
+	{
+		public string name { get; set; }
+		public string _markerType { get; set; }
+		public string _className { get; set; }
+		public bool _stroke { get; set; }
+		public string _color { get; set; }
+		public int _weight { get; set; }
+		public double _opacity { get; set; }
+		public bool _fill { get; set; }
+		public string _fillColor { get; set; }
+		public double _fillOpacity { get; set; }
+		public string _dashArray { get; set; }
+		public string _lineCap { get; set; }
+		public string _lineJoin { get; set; }
+		public bool _clickable { get; set; }
+		public string iconUrl { get; set; }
+		public Point _iconSize { get; set; }
+		public Point _iconAnchor { get; set; }
+		public string _html { get; set; }
+		public double _radius { get; set; }
+	}
+	public class Feature
+	{
+		public string type { get; set; }
+		public Properties properties { get; set; }
+		public Geometry geometry { get; set; }
+	}
+	public class OldGSIJson
+	{
+		public List<Layer> layer { get; set; }
+	}
+	public class GeoJson
+	{
+		public string type { get; set; }
+		public List<Feature> features { get; set; }
+	}
 	class Options
 	{
 		[Option('b', HelpText = "Beautify output json.", DefaultValue = false)]
