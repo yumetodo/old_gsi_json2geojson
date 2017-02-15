@@ -145,6 +145,27 @@ namespace old_gsi_json2geojson
 	{
 		static void Main(string[] args)
 		{
+			var options = new Options();
+			if (!Parser.Default.ParseArgumentsStrict(args, options))
+			{
+				Console.Error.WriteLine(options.GetUsage());
+				Environment.Exit(1);
+			}
+			var input = JsonConvert.DeserializeObject<OldGSIJson>(File.ReadAllText(options.Input));
+			var output = new GeoJson(input);
+			var re = JsonConvert.SerializeObject(
+				output,
+				(options.Beautify) ? Formatting.Indented : Formatting.None,
+				new JsonSerializerSettings { DefaultValueHandling = DefaultValueHandling.Ignore }
+			);
+			try
+			{
+				File.WriteAllText(options.Output, re);
+			}
+			catch (Exception)
+			{
+				Console.WriteLine(re);
+			}
 		}
 	}
 }
