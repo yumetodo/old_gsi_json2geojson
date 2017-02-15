@@ -10,6 +10,26 @@ using CommandLine.Text;
 
 namespace old_gsi_json2geojson
 {
+	public class PointJsonConverter : JsonConverter
+	{
+		public override bool CanConvert(Type objectType)
+		{
+			return objectType == typeof(Point);
+		}
+
+		public override object ReadJson(JsonReader reader, Type objectType, object existingValue, JsonSerializer serializer)
+		{
+			var tmp = serializer.Deserialize<double[]>(reader);
+			if (2 != tmp.Length) throw new JsonReaderException("only 2 elemnt is parmitted.");
+			return new Point(tmp[0], tmp[1]);
+		}
+
+		public override void WriteJson(JsonWriter writer, object value, JsonSerializer serializer)
+		{
+			var p = (Point)value;
+			serializer.Serialize(writer, new double[] { p.X, p.Y });
+		}
+	}
 	public class Style
 	{
 		public string strokeColor { get; set; }
@@ -20,6 +40,7 @@ namespace old_gsi_json2geojson
 	public class Geometry
 	{
 		public string type { get; set; }
+		[JsonProperty(ItemConverterType = typeof(PointJsonConverter))]
 		public List<Point> coordinates { get; set; }
 	}
 	public class Datum
