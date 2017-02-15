@@ -90,12 +90,27 @@ namespace old_gsi_json2geojson
 		//https://www.mapbox.com/mapbox.js/api/v3.0.1/l-circle/
 		//https://www.mapbox.com/mapbox.js/api/v3.0.1/l-circlemarker/
 		public double _radius { get; set; }
+		public Properties(Style s, string name_)
+		{
+			name = name_;
+			_color = s.strokeColor;
+			_opacity = s.strokeOpacity;
+			_weight = int.Parse(s.strokeWidth);
+			_lineCap = s.strokeLinecap;
+		}
 	}
 	public class Feature
 	{
 		public string type { get; set; }
 		public Properties properties { get; set; }
 		public Geometry geometry { get; set; }
+		public Feature(Layer l)
+		{
+			if (1 != l.data.Count) throw new FormatException("data length must be 1.");
+			type = l.data[0].type;
+			geometry = l.data[0].geometry;
+			properties = new Properties(l.style, l.name);
+		}
 	}
 	public class OldGSIJson
 	{
@@ -105,7 +120,13 @@ namespace old_gsi_json2geojson
 	{
 		public string type { get; set; }
 		public List<Feature> features { get; set; }
+		public GeoJson(OldGSIJson j)
+		{
+			type = "FeatureCollection";
+			features = j.layer.Select(l => new Feature(l)).ToList();
+		}
 	}
+
 	class Options
 	{
 		[Option('b', HelpText = "Beautify output json.", DefaultValue = false)]
