@@ -151,7 +151,17 @@ namespace old_gsi_json2geojson
 				Console.Error.WriteLine(options.GetUsage());
 				Environment.Exit(1);
 			}
-			var input = JsonConvert.DeserializeObject<OldGSIJson>(File.ReadAllText(options.Input));
+            string inputText = "";
+            try
+            {
+                inputText = File.ReadAllText(options.Input);
+            }
+            catch (Exception e)
+            {
+                Console.Error.WriteLine("fail to open input file\n" + e.Message);
+                Environment.Exit(1);
+            }
+			var input = JsonConvert.DeserializeObject<OldGSIJson>(inputText);
 			var output = new GeoJson(input);
 			var re = JsonConvert.SerializeObject(
 				output,
